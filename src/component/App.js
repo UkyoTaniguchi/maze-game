@@ -1,18 +1,25 @@
 // src/App.js
-import React from 'react';
+import React, { useState } from 'react';
 import Maze from './Maze';
+import Title_button from './title-button';
 
-class App extends React.Component{
-    render(){
-        return(
-            <div className="App">
-                <div className = "">
-                    <h1 className = "maintitle">MAZE &nbsp;&&nbsp; ESCAPE</h1>
-                </div>
-            <Maze />
+const App = () => {
+  const [isGameStarted, setIsGameStarted] = useState(false);
+
+  const handleStart = () => {
+    setIsGameStarted(true);
+  };
+
+  const handleReset = () => {
+    setIsGameStarted(false);
+  };
+
+  return (
+    <div className="App">
+      <Title_button onStart={handleStart} onReset={handleReset} />
+      {isGameStarted && <Maze />}
     </div>
-        );
-    }
+  );
 }
 
 export default App;
