@@ -23,9 +23,9 @@ class Title_button extends React.Component {
                         <div className='modal-header'></div>
                         <div className='modal-introduction'>
                             <h1 className="modal-title">説明</h1>
-                            <p>敵に当たらないように迷路から脱出しろ！</p>
-                            <p>矢印キーで上下左右に移動できるよ！</p>
-                            <p>画面右下のゴールを目指せ！Let's ESCAPE！！</p>
+                            <p><span className='modal-enemy'>敵</span>に当たらないように<span className='modal-time'>制限時間内</span>に迷路から脱出しろ！</p>
+                            <p>矢印キーで<span className='modal-chara'>キャラクター</span>を上下左右に移動できるよ！</p>
+                            <p><span className='modal-goal'>画面右下</span>のゴールを目指せ！Let's ESCAPE！！</p>
                         </div>
                         <button
                             className='modal-close-btn'

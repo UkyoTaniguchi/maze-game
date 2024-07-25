@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
+import Time from './timer.js';
 
-const Maze = () => {
+const Maze = ({ initailTime, onTimeUp }) => {
   const [position, setPosition] = useState({ x: 0, y: 0 }); //初期位置設定
   const [enemyPositions, setEnemyPositions] = useState([
     { x: 24, y: 2 },
@@ -9,12 +10,13 @@ const Maze = () => {
     { x: 16, y: 1},
     { x: 10, y: 13},
     { x: 4, y: 12},
-    { x: 11, y: 11}
+    { x: 4, y: 2}
   ]); //敵位置設定
   const [gameOver, setGameOver] = useState(false); //ゲームオーバー設定
   const [enemyPathIndexes, setEnemyPathIndexes] = useState([0, 0, 0, 0, 0, 0, 0]); // 敵の経路インデックス
   const [isGameOverModalOpen, setIsGameOverModalOpen] = useState(false); // ゲームオーバーモーダルの状態設定
   const [isGameClearModalOpen, setIsGameClearModalOpen] = useState(false); //ゴール時のモーダル
+  const [gameOverMessage, setGameOverMessage] = useState('敵に当たってしまいました。'); // ゲームオーバーメッセージ
 
   const maze = [
     [0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0],
@@ -107,13 +109,13 @@ const Maze = () => {
       { x: 8, y: 13 }
     ],
     [
-      { x: 11, y: 11 },
-      { x: 10, y: 11 },
-      { x: 9, y: 11 },
-      { x: 8, y: 11 },
-      { x: 8, y: 12 },
-      { x: 8, y: 13 },
-      { x: 9, y: 13 }
+      { x: 4, y: 2 },
+      { x: 5, y: 2 },
+      { x: 6, y: 2 },
+      { x: 7, y: 2 },
+      { x: 8, y: 2 },
+      { x: 8, y: 3 },
+      { x: 9, y: 3 }
     ]
   ]; // 4体の敵の経路
 
@@ -156,6 +158,12 @@ const Maze = () => {
     }
   };
 
+  const handleTimeUp = () => {
+    setGameOver(true);
+    setGameOverMessage('時間切れです・・・');
+    setIsGameOverModalOpen(true); //時間切れ
+  }
+
   useEffect(() => {
     const intervalId = setInterval(() => { //0.1秒毎に移動していくsetIntervalを使用
       if (gameOver) return; //gameOverの場合、この関数を修了
@@ -179,7 +187,7 @@ const Maze = () => {
           return newEnemyPosition; //敵の新しいポジションのnewEnemyPositionを敵の数でまとめて返す
         });
       });
-    }, 100); //敵の速度
+    }, 120); //敵の速度
 
     return () => clearInterval(intervalId); //クリーンアップ関数で以前のインターバルをクリア
   }, [enemyPathIndexes, gameOver]); //この依存配列の値が変わるとEffectを再実行
@@ -195,7 +203,9 @@ const Maze = () => {
   };
 
   return (
-    <div className="maze-container" tabIndex="0" onKeyDown={handleKeyDown}>
+    <div>
+      <Time initialTime={30} onTimeUp={handleTimeUp} gameOver={gameOver}/>
+      <div className="maze-container" tabIndex="0" onKeyDown={handleKeyDown}>
       {maze.map((row, rowIndex) => ( //迷路の各行をプロット(rowは各行の内容、rowIndexは行数)
         <div key={rowIndex} className="maze-row"> {/* 各行のクラスとキーを設定 */}
           {row.map((cell, cellIndex) => ( //迷路の各列をプロット（cellは列の内容、cellIndexは列数）
@@ -216,7 +226,7 @@ const Maze = () => {
             <div className="modal-header"></div>
             <div className="modal-introduction">
               <h2>Game Over</h2>
-              <p>敵に当たってしまいました。</p>
+              <p>{gameOverMessage}</p>
             </div>
             <button className="modal-close-btn" onClick={handleCloseModal}>
               とじる
@@ -239,6 +249,7 @@ const Maze = () => {
           </div>
         </div>
       )}
+      </div>
     </div>
   );
 };
